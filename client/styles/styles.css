@@ -53,7 +53,7 @@ form {
   margin-bottom: 20px;
 }
 
-form input[type="text"] {
+form input[type='text'] {
   margin-right: 10px;
   width: 70%;
   font-size: 12px;
