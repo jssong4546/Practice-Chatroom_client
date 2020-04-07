@@ -8,8 +8,15 @@
   <body>
     <div id="main">
       <h1>chatterbox</h1>
-      <span>Room:</span>
-      <select id="roomName"></select>
+      <form>
+        <label for="rooms">Room:</label>
+        <select id="rooms"> </select
+        ><br />
+        <label for="username">User Name:</label>
+        <input type="text" id="username" name="username" />
+        <input type="text" id="message" name="message" />
+        <input type="button" id="submit" value="Submit" onclick="inputData()" />
+      </form>
     </div>
 
     <!-- #chats 엘리먼트의 id는 바꾸지 마세요 -->
