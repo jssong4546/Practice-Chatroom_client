@@ -9,7 +9,6 @@ const app = {
     fetch(app.server)
       .then((res) => res.json())
       .then((res) => {
-        console.log('dd');
         app.messages = JSON.parse(JSON.stringify(res));
         app.makeRoomList();
         app.renderFilteredMessages(app.currentRoom);
@@ -82,7 +81,10 @@ const app = {
     }
   },
   selectRoom: function (event) {
-    app.renderFilteredMessages(event.target.value);
+    let selected = event.target.value;
+    let roomName = document.querySelector('#roomname');
+    roomName.value = selected;
+    app.renderFilteredMessages(selected);
   },
   renderFilteredMessages: function (room = '') {
     let rooms = document.querySelector('#rooms');
@@ -90,9 +92,6 @@ const app = {
       room === '' ? rooms.options[rooms.selectedIndex].value : room;
     app.currentRoom = selected;
     let filtered = app.messages.filter((ele) => ele.roomname === selected);
-
-    let roomName = document.querySelector('#roomname');
-    roomName.value = selected;
 
     app.clearMessages();
     filtered.forEach((ele) => app.renderMessage(ele));
