@@ -9,18 +9,18 @@ const app = {
     fetch(app.server)
       .then((res) => res.json())
       .then((res) => {
+        console.log('dd');
         app.messages = JSON.parse(JSON.stringify(res));
         app.makeRoomList();
-        app.renderFilteredMessages();
-        //setTimeout(app.fetch, 1000);
+        app.renderFilteredMessages(app.currentRoom);
+        setTimeout(app.fetch, 1000);
       });
   },
+  currentRoom: '',
   messages: [],
   clearMessages: function () {
     let chats = document.querySelector('#chats');
     chats.innerHTML = '';
-    document.querySelector('#username').value = '';
-    document.querySelector('#message').value = '';
   },
   renderMessage: function (msg) {
     let comment = document.createElement('div');
@@ -28,15 +28,15 @@ const app = {
     let chats = document.querySelector('#chats');
 
     let username = document.createElement('div');
-    username.innerHTML = `${msg.username}:`;
+    username.textContent = `${msg.username}:`;
     username.className = 'username';
 
     let message = document.createElement('div');
-    message.innerHTML = `${msg.text}`;
+    message.textContent = `${msg.text}`;
 
-    comment.appendChild(username);
+    comment.prepend(username);
     comment.appendChild(message);
-    chats.appendChild(comment);
+    chats.prepend(comment);
   },
   send: function (msg) {
     fetch(app.server, {
@@ -51,6 +51,8 @@ const app = {
       app.clearMessages();
       app.messages.push(msg);
       app.renderFilteredMessages(msg.roomname);
+      document.querySelector('#username').value = '';
+      document.querySelector('#message').value = '';
     });
   },
   makeRoomList: function () {
@@ -69,6 +71,13 @@ const app = {
       rooms.addEventListener('change', app.selectRoom);
       rooms.appendChild(room);
     });
+
+    for(let i = 0; i < rooms.options.length; i++) {
+      let option = rooms.options[i];
+      if(option.value === app.currentRoom) {
+        option.selected = true;
+      }
+    }
   },
   selectRoom: function (event) {
     app.renderFilteredMessages(event.target.value);
@@ -76,6 +85,7 @@ const app = {
   renderFilteredMessages: function (room = '') {
     let rooms = document.querySelector('#rooms');
     let selected = room === '' ? rooms.options[rooms.selectedIndex].value : room;
+    app.currentRoom = selected;
     let filtered = app.messages.filter((ele) => ele.roomname === selected);
 
     let roomName = document.querySelector('#roomname');
