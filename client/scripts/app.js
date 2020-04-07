@@ -18,7 +18,7 @@ const app = {
   },
   messages: [],
   clearMessages: function () {
-    let chats = document.querySelector("#chats");
+    let chats = document.querySelector('#chats');
     chats.innerHTML = '';
   },
   renderMessage: function (msg) {
@@ -73,10 +73,14 @@ app.init();
 
 function inputData() {
   const message = {
-    username: 'ingikim',
-    text: 'hello',
-    roomname: 'cs04'
+    roomname: 'cs04',
   };
+  let nameInput = document.querySelector('#username');
+  let messageInput = document.querySelector('#message');
+
+  message.username = nameInput.value;
+  message.text = messageInput.value;
+
   app.send(message);
 }
 
