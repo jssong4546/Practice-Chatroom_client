@@ -1,4 +1,5 @@
 // eslint-disable-next-line
+/* eslint-disable */
 const app = {
   server: 'http://52.78.206.149:3000/messages',
   init: function () {
@@ -9,29 +10,75 @@ const app = {
       .then((res) => res.json())
       .then((res) => {
         res.forEach((element) => {
-          addComment(element);
+          this.renderMessage(element);
         });
       });
   },
+  clearMessages: function () {
+    let chats = document.querySelector("#chats");
+    chats.innerHTML = '';
+  },
+  renderMessage: function (msg) {
+    // render messages
+    let comment = document.createElement('div');
+    comment.className = 'chat';
+    let chats = document.querySelector('#chats');
+
+    let username = document.createElement('div');
+    username.innerHTML = `${msg.username}:`;
+    username.className = 'username';
+
+    let message = document.createElement('div');
+    message.innerHTML = `${msg.text}`;
+
+    comment.appendChild(username);
+    comment.appendChild(message);
+    chats.appendChild(comment);
+
+    // show rooms
+    let isIncluded = false
+    document.querySelectorAll('.room').forEach((ele) => {
+      if(ele.value === msg.roomname) {
+        isIncluded = true;
+      }
+    });
+    if(!isIncluded) {
+      let room = document.createElement('option');
+      room.className = 'room';
+      room.value = msg.roomname;
+      room.innerHTML = msg.roomname;
+      room.addEventListener('onchange', selectRoom);
+      let rooms = document.querySelector('#rooms');
+      rooms.appendChild(room);
+    }
+  },
+  send: function (msg) {
+    fetch(app.server, {
+      method: 'POST',
+      body: JSON.stringify(msg),
+      headers: {
+        "Content-Type": "application/json",
+      }
+    }).then(response => {
+      return response.json();
+    }).then(json => {
+      console.log(json);
+      // message sent!
+    });
+  }
 };
 
 app.init();
 
-function addComment(user) {
-  let comment = document.createElement('div');
-  comment.className = 'chat';
-  let chats = document.querySelector('#chats');
+function inputData() {
+  const message = {
+    username: 'ingikim',
+    text: 'hello',
+    roomname: 'cs04'
+  };
+  app.send(message);
+}
 
-  let username = document.createElement('div');
-  username.innerHTML = `${user.username}:`;
-  username.className = 'username';
-
-  let message = document.createElement('div');
-  message.innerHTML = `${user.text}`;
-
-  comment.appendChild(username);
-  comment.appendChild(message);
-  chats.appendChild(comment);
-
-  //{id: 0, username: "이호용", text: "메시지가 리셋되었습니다", roomname: "코드스테이츠", date: "2020-02-25T04:43:10.113Z"}
+function selectRoom() {
+  console.log('ddd');
 }

@@ -48,16 +48,28 @@ body {
 }
 
 form {
-  padding: 20px;
+  padding-top: 20px;
   padding-left: 0;
-  margin-bottom: 20px;
 }
 
-form input[type='text'] {
+form #message {
   margin-right: 10px;
   width: 70%;
   font-size: 12px;
   padding: 5px;
+}
+
+form #username {
+  margin-bottom: 10px;
+  width: 20%;
+  font-size: 12px;
+  padding: 5px;
+}
+
+form select {
+  margin-bottom: 15px;
+  font-size: 12px;
+  padding: 3px;
 }
 
 .chat {
