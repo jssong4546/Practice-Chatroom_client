@@ -3,6 +3,7 @@
 const app = {
   server: 'http://52.78.206.149:3000/messages',
   init: function () {
+    app.clearMessages();
     app.fetch();
   },
   fetch: function () {
@@ -33,23 +34,25 @@ const app = {
     let message = document.createElement('div');
     message.innerHTML = `${msg.text}`;
 
-    comment.appendChild(username);
-    comment.appendChild(message);
-    chats.appendChild(comment);
+    comment.prepend(username);
+    comment.prepend(message);
+    chats.prepend(comment);
   },
   send: function (msg) {
     fetch(app.server, {
       method: 'POST',
       body: JSON.stringify(msg),
       headers: {
-        "Content-Type": "application/json",
-      }
-    }).then(response => {
-      return response.json();
-    }).then(json => {
-      console.log(json);
-      // message sent!
-    });
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        console.log(json);
+        // message sent!
+      });
   },
   showRooms: function () {
     let allRoom = this.messages.map((ele) => {
@@ -89,5 +92,5 @@ function selectRoom() {
   let selected = rooms.options[rooms.selectedIndex].value;
   let filtered = app.messages.filter((ele) => ele.roomname === selected);
   app.clearMessages();
-  filtered.forEach(ele => app.renderMessage(ele));
+  filtered.forEach((ele) => app.renderMessage(ele));
 }
