@@ -10,10 +10,12 @@
       <h1>chatterbox</h1>
       <form>
         <label for="rooms">Room:</label>
-        <select id="rooms"> </select
-        ><br />
+        <select id="rooms">
+        </select><br />
+        <label for="roomname">Room Name:</label>
+        <input type="text" class="text" id="roomname" name="roomname" /><br>
         <label for="username">User Name:</label>
-        <input type="text" id="username" name="username" />
+        <input type="text" class="text" id="username" name="username" />
         <input type="text" id="message" name="message" />
         <input type="button" id="submit" value="Submit" onclick="inputData()" />
       </form>
