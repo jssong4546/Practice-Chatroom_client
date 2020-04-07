@@ -9,17 +9,19 @@ const app = {
     fetch(app.server)
       .then((res) => res.json())
       .then((res) => {
+        this.messages = JSON.parse(JSON.stringify(res));
         res.forEach((element) => {
           this.renderMessage(element);
         });
+        this.showRooms();
       });
   },
+  messages: [],
   clearMessages: function () {
     let chats = document.querySelector("#chats");
     chats.innerHTML = '';
   },
   renderMessage: function (msg) {
-    // render messages
     let comment = document.createElement('div');
     comment.className = 'chat';
     let chats = document.querySelector('#chats');
@@ -34,23 +36,6 @@ const app = {
     comment.appendChild(username);
     comment.appendChild(message);
     chats.appendChild(comment);
-
-    // show rooms
-    let isIncluded = false
-    document.querySelectorAll('.room').forEach((ele) => {
-      if(ele.value === msg.roomname) {
-        isIncluded = true;
-      }
-    });
-    if(!isIncluded) {
-      let room = document.createElement('option');
-      room.className = 'room';
-      room.value = msg.roomname;
-      room.innerHTML = msg.roomname;
-      room.addEventListener('onchange', selectRoom);
-      let rooms = document.querySelector('#rooms');
-      rooms.appendChild(room);
-    }
   },
   send: function (msg) {
     fetch(app.server, {
@@ -65,7 +50,23 @@ const app = {
       console.log(json);
       // message sent!
     });
-  }
+  },
+  showRooms: function () {
+    let allRoom = this.messages.map((ele) => {
+      return ele.roomname;
+    });
+    let roomWithoutRepeat = Array.from(new Set(allRoom));
+
+    roomWithoutRepeat.forEach((ele) => {
+      let room = document.createElement('option');
+      room.className = 'room';
+      room.value = ele;
+      room.innerHTML = ele;
+      let rooms = document.querySelector('#rooms');
+      rooms.addEventListener('change', selectRoom);
+      rooms.appendChild(room);
+    });
+  },
 };
 
 app.init();
@@ -80,5 +81,9 @@ function inputData() {
 }
 
 function selectRoom() {
-  console.log('ddd');
+  let rooms = document.querySelector('#rooms');
+  let selected = rooms.options[rooms.selectedIndex].value;
+  let filtered = app.messages.filter((ele) => ele.roomname === selected);
+  app.clearMessages();
+  filtered.forEach(ele => app.renderMessage(ele));
 }
